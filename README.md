@@ -95,5 +95,8 @@ Adapun perbandingan ROC Curve XGBoost default dan setelah Tuning sebagai berikut
 XGBoostClassifier setelah dituning hyperparameternya mendapatkan nilai ROC AUC yang lebih baik dimana awalnya 0.89 menjadi 0.91.
 
 
+***
+Note : Terdapat file 'Load Model and Testing dataset.ipynb', bisa digunakan untuk load model dan menguji dataset test untuk diprediksi menggunakan model yang telah kita buat.
+
 # Thank you for reading until the end!
 ### Nila Wildanul Husna
