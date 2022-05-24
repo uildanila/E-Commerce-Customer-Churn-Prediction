@@ -86,7 +86,7 @@ Kemudian dilakukan perbandingan anatara hasil klasifikasi Random Forest dan XGBo
 |XGBClassifier|	0.963718|	0.935717|	0.820812|	0.785042|	0.861809|
 |RandomForestClassifier|	0.961793|	0.932925|	0.815053|	0.770060|	0.867713|
 
-Berdasarkan hasil evaluatin metrics tersbeut, maka **Best Model yang dipilih adalah Model XGBoost** yang telah dilakukan Tuning.
+Berdasarkan hasil evaluation metrics tersbeut, maka **Best Model yang dipilih adalah Model XGBoost** yang telah dilakukan Tuning.
 
 Adapun perbandingan ROC Curve XGBoost default dan setelah Tuning sebagai berikut.
 
