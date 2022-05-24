@@ -1,4 +1,5 @@
-# Capstone Project Modul 3 - Customer Churn E-Commerce Prediction
+# Capstone Project Modul 3 - E-Commerce Customer Churn Prediction
+
 
 **Bussiness Context**
 
@@ -30,3 +31,69 @@ Konsekuensi : *Jika kita mengasumsikan eCommerce berinvestasi dalam mempertahank
 *Konsekuensi : Dengan asumsi eCommerce hanya memfokuskan investasinya dalam mempertahankan pelanggan yang berisiko agar tidak Churn dan terus memberikan penawaran yang sama kepada pelanggan setia lain, sehingga ***Tipe II Error ini adalah kehilangan pelanggan***. Perusahaan akan sangat merugi karena biaya untuk mendapatkan pelanggan baru diperkirakan lebih tinggi dibandingkan dengan mempertahankan pelanggan saat ini.*
 
 Berdasarkan konsekuensinya, maka sebisa mungkin yang akan kita lakukan adalah membuat model yang dapat **mengurangi jumlah kehilangan pelanggan** dari perusahaan tersebut, dan mengurangi biaya investasi yang sia-sia dalam mempertahankan pelanggan yang diprediksi akan *Churn* namun kenyataannya pelanggan tidak akan *Churn*. Jadi harus kita seimbangkan antara precision dan recallnya dari kelas positive (Customer churn). Jadi nanti metric yang akan kita gunakan adalah **roc_auc**, karena jika diperhatikan dataset yang dimiliki memiliki imbalanced data.
+
+**Data Understanding**
+Note :
+- Dataset ini hanyalah data *training* yang digunakan untuk membangun model dan akan diusahakan agar model memiliki skor evaluation metrics setinggi mungkin. 
+- Setiap baris data mempresentasikan informasi riwayat transaksi seorang pelanggan di masa lalu
+
+### Attibute Information
+
+| Attribute | Data Type, Length | Description |
+| --- | --- | --- |
+| Tenure | Float | Tenure of customer in ecommerce company |
+| WarehouseToHome | Float | Distance in between warehouse to home of customer |
+| NumberOfDeviceRegistered | Integer | Total number of devices is registered on particular customer |
+| PreferedOrderCat | Text | Preferred order category of customer in last month |
+| SatisfactionScore | Integer | Satisfactory score of customer on service |
+| MaritalStatus | Text | Marital status of customer |
+| NumberOfAddress | Integer | Total number of added added on particular customer |
+| Complain | Integer | Any complaint has been raised in last month |
+| DaySinceLastOrder | Float | Day Since last order by customer |
+| CashbackAmount | Float | Average cashback in last month |
+| Churn | Integer | 0 - Not Churn, 1 - Churn|
+
+**Data Analyze**
+
+![newplot](https://user-images.githubusercontent.com/73053128/170018922-7f6e4d89-46b4-4089-96a5-e99589a37ec2.png)
+***
+**Observation :**
+
+Dapat dilihat berdasarkan hasil di atas, data yang dimiliki cukup `imbalance`. Dimana hanya 17.1% data kelas positif (Churn). Hal ini akan mempengaruhi hasil klasifikasi nantinya, maka dari itu akan dilakukan pendekatan untuk mengatasi masalah data imbalance ini dengan metode resampling menggunakan SMOTE (Synthetic Minority Oversampling) yaitu teknik yang dapat membangkitkan sejumlah data baru yang mirip dengan data kelas minoritas hingga distribusinya lebih berimbang.
+
+***
+
+# Model Building & Evaluation
+
+Sebelum membangun model, beberapa tahapan data cleaning yang telah dilakukan adalah melakukan penanganan terhadap missing value karena ditemukan missing value dengan tipe Missing Not At Random dimana, beberapa variabel mengandung missing value ketika nilai variable `CashbackAmount`nya berada dalam range tertentu maka ditambahkan  suatu variabel binary missing value flags dan melakukan impute missing value dengan nilai median, kemudian dilakukan juga pengecekan dan pengananan terhadap outliers, melakukan log transform untuk variabel `WarehouseToHome` karena memiliki nilai right skewness yang cukup tinggi dibandingkn dengan variabel lainnya, mengubah kategori beberapa fitur/kolom, melakukan binning data, encoding, mengubah tipe data dan urutan kolom/fitur.
+
+Untuk membangun model ini dilakukan Handling Imbalanced Data dengan SMOTENC, dapat dilihat pada bagian 'Modelling' notebook. Adapun model yang digunakan dalam project ini adalah beberapa model untuk mendapat model dengan evaluation metrics terbaik. 
+| Models | ROC_AUC | Accuracy | F1-Score | Precision | Recall|
+|---|---|---|---|---|---|
+|RandomForestClassifier|	0.960534|	0.929624|	0.804334|	0.766112|	0.848442|
+|XGBClassifier|	0.955499|	0.927331|	0.799374|	0.759855	|0.845544|
+|VotingClassifier|	0.935575|	0.892775|	0.729127|	0.642475|	0.843942|
+|GradientBoostingClassifier|	0.912976|	0.864068|	0.670206|	0.573413|	0.806936|
+|SVC|	0.898197|	0.824187|	0.612209|	0.492370| 0.809855|
+|AdaBoostClassifier|	0.895630|	0.832821|	0.623445|	0.507646|	0.808428|
+|KNeighborsClassifier|	0.885663|	0.823425|	0.605713|	0.490389|	0.793591|
+|LogisticRegression|	0.877712|	0.796237|	0.578303|	0.448242|	0.815891|
+|DecisionTreeClassifier|	0.856163|	0.897352|	0.725279|	0.669817|	0.793569|
+
+Kemudian dilakukan perbandingan anatara hasil klasifikasi Random Forest dan XGBoost dengan menggunakan Hyperparameter Tunning terbaik dari hasil Grid Serach CV, sehingga diperoleh peningkatan evaluation metricsnya sebagai berikut:
+| Models | ROC_AUC | Accuracy | F1-Score | Precision | Recall|
+|---|---|---|---|---|---|
+|XGBClassifier|	0.963718|	0.935717|	0.820812|	0.785042|	0.861809|
+|RandomForestClassifier|	0.961793|	0.932925|	0.815053|	0.770060|	0.867713|
+
+Berdasarkan hasil evaluatin metrics tersbeut, maka **Best Model yang dipilih adalah Model XGBoost** yang telah dilakukan Tuning.
+
+Adapun perbandingan ROC Curve XGBoost default dan setelah Tuning sebagai berikut.
+
+![Screenshot (128)](https://user-images.githubusercontent.com/73053128/170023240-5e883e24-072a-400d-a507-bf0b3768acd8.png)
+
+XGBoostClassifier setelah dituning hyperparameternya mendapatkan nilai ROC AUC yang lebih baik dimana awalnya 0.89 menjadi 0.91.
+
+
+# Thank you for reading until the end!
+### Nila Wildanul Husna
