@@ -1,4 +1,4 @@
-# Capstone Project Modul 3 - E-Commerce Customer Churn Prediction
+# E-Commerce Customer Churn Prediction
 Capstone Project modul 3 ini bertujuan untuk mengimplementasikan materi yang telah dipelajari terkait modul machine learning dalam sebuah proyek. 
 
 **Bussiness Context**
