@@ -1,5 +1,9 @@
 # E-Commerce Customer Churn Prediction
+
 Capstone Project modul 3 ini bertujuan untuk mengimplementasikan materi yang telah dipelajari terkait modul machine learning dalam sebuah proyek. 
+
+![image](https://www.wigzo.com/blog/wp-content/uploads/2021/11/7-Strategies-To-Reduce-Customer-Churn-Rate.png)
+
 
 **Bussiness Context**
 
